@@ -9,4 +9,3 @@ if __name__ == '__main__':
     treap = example_reader(filename)
     print(f'HEIGHT: {treap.h}')
     treap.pretty_print()
-    # print('sas')
