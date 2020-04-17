@@ -1,4 +1,15 @@
 from random import *
+from _service_data import *
+
+#################################
+# TODO:
+# _is_left_child returns three values: True, False, None. It's incorrect
+#  ^ add check on root (or make root permanently left or right)
+#  self._get_children() isn't private. It should be  self.get_children()
+
+
+#################################
+
 
 class Node:
     def __init__(self, value, priority = float('Nan')):
@@ -42,7 +53,7 @@ class Node:
         if self.parent == None:
             return None
         # is this correct?
-        elif self.parent._get_children()['left'] == self:
+        elif self.parent.get_children()['left'] == self:
             return True
         else:
             return False
@@ -68,6 +79,11 @@ class Node:
         elif children['right'] == self:
             return children['left']
 
-    # new
     def get_chosen_child(self, which):
         return self.children[which]
+
+    # new
+    def _is_leaf(self):
+        if(self.children['left']==None and self.children['right']==None):
+            return True
+        return False
