@@ -1,5 +1,6 @@
 from Node import Node
 from random import *
+from _service_data import *
 
 class Treap:
     def __init__(self):
@@ -9,8 +10,23 @@ class Treap:
         self.values_list = [] # can be used to check our work
         self.values_dict = [] # contains pairs value:priority
 
+    def __rec_search(self, cur_node, value):
+        if(cur_node == None):
+            return None
+        if(cur_node.value == value):
+            return cur_node
+        elif(cur_node.value < value):
+            return self.__rec_search(cur_node.get_chosen_child('right'), value)
+        elif (cur_node.value > value):
+            return self.__rec_search(cur_node.get_chosen_child('left'), value)
+
     def search(self, value):
-        return None
+        search_res = self.__rec_search(self.root, value)
+        if(search_res == None):
+            print(f"Node with key {value} not found")
+        else:
+            print(f"Node with key {value} found.")
+        return search_res
 
     def right_rotation(self, node_y):
 
@@ -103,6 +119,24 @@ class Treap:
         cell_view = line
         return cell_view
 
+    def normal_print(self, node, _prefix = "", _right = True):
+        if(node == None):
+            return
+
+        line = _prefix
+        if (_right):
+            line += "`- "
+        else:
+            line += "|- "
+        line += '(' + color.BOLD + str(node.value) + color.END + ', ' + str(node.priority) + ')'
+        print(line)
+
+        _prefix += "   " if _right else "|  "
+
+        children = node.get_children()
+        self.normal_print(children['left'], _prefix, False)
+        self.normal_print(children['right'], _prefix, True)
+
 
 
     def __print_layer(self, layer_nodes, current_layer, occupied_windows):
@@ -152,8 +186,6 @@ class Treap:
         print(line)
         print(down_line)
         return occupied_windows
-
-
 
     def pretty_print(self):
         """

@@ -1,4 +1,5 @@
 from random import *
+from _service_data import *
 
 class Node:
     def __init__(self, value, priority = float('Nan')):
