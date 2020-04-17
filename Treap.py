@@ -2,6 +2,15 @@ from Node import Node
 from random import *
 from _service_data import *
 
+#################################
+# TODO:
+# Add meld function from here: https://www.youtube.com/watch?v=erKlLEXLKyY
+# Rotations work wrong (deletion of 7 isn't correct)
+# _is_left_child
+
+
+#################################
+
 class Treap:
     def __init__(self):
         self.root = None
@@ -10,7 +19,17 @@ class Treap:
         self.values_list = [] # can be used to check our work
         self.values_dict = [] # contains pairs value:priority
 
+    ###########################################
+    ### S E A R C H       F U N C T I O N S ###
+    ###########################################
+
     def __rec_search(self, cur_node, value):
+        """
+        Recursive search implementation
+        :param cur_node: current node
+        :param value: searched value
+        :return: ...
+        """
         if(cur_node == None):
             return None
         if(cur_node.value == value):
@@ -21,6 +40,11 @@ class Treap:
             return self.__rec_search(cur_node.get_chosen_child('left'), value)
 
     def search(self, value):
+        """
+        Search function implementation
+        :param value: searched value
+        :return: node with searched value if it exists, None otherwise
+        """
         search_res = self.__rec_search(self.root, value)
         if(search_res == None):
             print(f"Node with key {value} not found")
@@ -79,17 +103,101 @@ class Treap:
         y._set_chosen_child('left', node_x)
         return
 
+
+    ###########################################
+    ### I N S E R T       F U N C T I O N S ###
+    ###########################################
+
     def insert(self, value):
         node = Node(value)
         return node
 
-    def delete(self, value):
-        pass
+    ###########################################
+    ### D E L E T E       F U N C T I O N S ###
+    ###########################################
 
-    # new functions
+    def __rec_delete(self, del_candidate : Node):
+        # If node is now a leaf:
+        if (del_candidate._is_leaf()):
+            parent = del_candidate.get_parent()
+            if (del_candidate.is_left_child()):
+                parent._set_chosen_child('left', None)
+            else:
+                parent._set_chosen_child('right', None)
+            del del_candidate
+        # If node is not a leaf, but has only one child
+        elif(del_candidate.check_full_children()):
+
+            parent = del_candidate.get_parent()
+
+            child = del_candidate.get_chosen_child('left')
+            if(child == None):
+                child = del_candidate.get_chosen_child('right')
+
+            if (del_candidate.is_left_child()):
+                parent._set_chosen_child('left', child)
+            else:
+                parent._set_chosen_child('right', child)
+            del del_candidate
+
+        # If node has two children
+        else:
+            del_candidate._set_priority(n_inf)
+            l_child = del_candidate.get_chosen_child('left')
+            r_child = del_candidate.get_chosen_child('right')
+
+            if(l_child.get_priority() > r_child.get_priority()):
+                self.right_rotation(del_candidate)
+            else:
+                self.left_rotation(del_candidate)
+            self.__rec_delete(del_candidate)
+
+
+    def delete(self, value):
+        del_candidate = self.search(value)
+        if(del_candidate==None):
+            print(f"Node with key {value} not found.")
+        else:
+            self.__rec_delete(del_candidate)
+            print(f"Node with key {value} was deleted")
+
+    ###########################################
+    ### S E R V I C E     F U N C T I O N S ###
+    ###########################################
+
     def check_hight(self):
         pass
 
+    ###########################################
+    ### P R I N T I N G   F U N C T I O N S ###
+    ###########################################
+
+    def normal_print(self, node, _prefix="", _right=True):
+        """
+        Prints tree in hierarchical view
+        :param node: root of the branch that you wish to print
+        :param _prefix: printing parameter
+        :param _right: should be True if current node is right son
+        :return:
+        """
+        if (node == None):
+            return
+
+        line = _prefix
+        if (_right):
+            line += "`- "
+        else:
+            line += "|- "
+        line += '(' + color.BOLD + str(node.value) + color.END + ', ' + str(node.priority) + ')'
+        print(line)
+
+        _prefix += "   " if _right else "|  "
+
+        children = node.get_children()
+        self.normal_print(children['left'], _prefix, False)
+        self.normal_print(children['right'], _prefix, True)
+
+    # Pretty print functions
     def __check_empty_layer(self, layer_nodes):
         for node in layer_nodes:
             if(node != None):
@@ -118,26 +226,6 @@ class Treap:
             line = line[:-1]
         cell_view = line
         return cell_view
-
-    def normal_print(self, node, _prefix = "", _right = True):
-        if(node == None):
-            return
-
-        line = _prefix
-        if (_right):
-            line += "`- "
-        else:
-            line += "|- "
-        line += '(' + color.BOLD + str(node.value) + color.END + ', ' + str(node.priority) + ')'
-        print(line)
-
-        _prefix += "   " if _right else "|  "
-
-        children = node.get_children()
-        self.normal_print(children['left'], _prefix, False)
-        self.normal_print(children['right'], _prefix, True)
-
-
 
     def __print_layer(self, layer_nodes, current_layer, occupied_windows):
         layer_windows = []
@@ -189,7 +277,7 @@ class Treap:
 
     def pretty_print(self):
         """
-            recursive BFS run to print pretty
+        Prints tree as graph
         :return: None
         """
         if(self.root == None):

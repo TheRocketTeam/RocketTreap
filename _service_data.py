@@ -1,3 +1,9 @@
+# positive infinity
+p_inf = float("inf")
+
+# negative infinity
+n_inf = float("-inf")
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
