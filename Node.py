@@ -44,7 +44,7 @@ class Node:
     def get_children(self):
         return self.children
 
-    def is_root(self, node):
+    def is_root(self):
         if self.parent == None:
             return True
         return False
