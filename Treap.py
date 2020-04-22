@@ -108,9 +108,37 @@ class Treap:
     ### I N S E R T       F U N C T I O N S ###
     ###########################################
 
-    def insert(self, value):
+
+    def insert(self, value, rand_range):
         node = Node(value)
-        return node
+        # If the tree is empty, set this node as a root
+        if self.root == None:
+            self.root = node
+        else:
+            # We will always work with two nodes - one given and one with which we are comparing the given one
+            comparing_node = self.root
+            # At forst we want to insert the new node to be a leaf
+            while not comparing_node._is_leaf():
+                if comparing_node.get_value() >= value:
+                    comparing_node = comparing_node.get_chosen_child('left')
+                elif comparing_node.get_value() < value:
+                    comparing_node = comparing_node.get_chosen_child('right')
+            if comparing_node.get_value() >= value:
+                comparing_node._set_chosen_child('left', node)
+            elif comparing_node.get_value() < value:
+                comparing_node._set_chosen_child('right', node)
+            node._set_parent(comparing_node)
+        # Set priority to the node at random
+        node._set_priority(random.randrange(rand_range))
+        # Perform rotations until we are max/min heap (currently done for max)
+        while node.get_priority() > comparing_node.priority():
+            if node.is_left_child():
+                self.right_rotation(comparing_node)
+            elif not node.is_left_child():
+                self.left_rotation(comparing_node)
+            comparing_node = node.get_parent()
+        return
+
 
     ###########################################
     ### D E L E T E       F U N C T I O N S ###
@@ -167,6 +195,17 @@ class Treap:
 
     def check_hight(self):
         pass
+
+    def copy_tree(self):
+        NewTreap = Treap()
+        return NewTreap
+
+        mirror = BinaryTree(self.key)
+        if self.right is not None:
+            mirror.left = self.right.mirror_copy()
+        if self.left is not None:
+            mirror.right = self.left.mirror_copy()
+        return NewTreap
 
     ###########################################
     ### P R I N T I N G   F U N C T I O N S ###
