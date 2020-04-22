@@ -95,7 +95,8 @@ class Treap:
         y._set_parent(x_parent)
 
         # reattache left child of y (t_2) to be right child of y
-        t_2._set_parent(node_x)
+        if(t_2 != None):
+            t_2._set_parent(node_x)
         node_x._set_chosen_child('right', t_2)
 
         # make x a child of y
@@ -154,7 +155,7 @@ class Treap:
                 parent._set_chosen_child('right', None)
             del del_candidate
         # If node is not a leaf, but has only one child
-        elif(del_candidate.check_full_children()):
+        elif(not del_candidate.check_full_children()):
 
             parent = del_candidate.get_parent()
 
@@ -166,6 +167,9 @@ class Treap:
                 parent._set_chosen_child('left', child)
             else:
                 parent._set_chosen_child('right', child)
+
+            child._set_parent(parent)
+
             del del_candidate
 
         # If node has two children
