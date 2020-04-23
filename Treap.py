@@ -12,12 +12,14 @@ from _service_data import *
 #################################
 
 class Treap:
-    def __init__(self):
+    def __init__(self, priority_range = 1, heap_kind = 'max'):
         self.root = None
         self.n = 0 # Nodes number
         self.h = 0 # Tree hight ( can be usefull )
         self.values_list = [] # can be used to check our work
-        self.values_dict = [] # contains pairs value:priority
+        self.values_dict = {} # contains pairs value:priority
+        self.priority_range = priority_range
+        self.heap_kind = heap_kind
 
     ###########################################
     ### S E A R C H       F U N C T I O N S ###
@@ -58,18 +60,22 @@ class Treap:
         y_parent = node_y.get_parent()
         y_children = node_y.get_children()
         x = y_children['left']
-        x_children = x.get_children()
-        t_2 = x_children['right']
+        if x!= None:
+            x_children = x.get_children()
+            t_2 = x_children['right']
+        else:
+            t_2 = None
 
         # make x the root of the subtree we are working with
         if node_y.is_left_child():
             y_parent._set_chosen_child('left', x)
-        elif not node_y.is_left_child():
+        elif not node_y.is_left_child() and y_parent != None:
             y_parent._set_chosen_child('right', x)
         x._set_parent(y_parent)
 
         # reattache right child of x (t_2) to be left child of y
-        t_2._set_parent(node_y)
+        if t_2 != None:
+            t_2._set_parent(node_y)
         node_y._set_chosen_child('left', t_2)
 
         # make y a child of x
@@ -83,14 +89,17 @@ class Treap:
         x_parent = node_x.get_parent()
         x_children = node_x.get_children()
         y = x_children['right']
-        y_children = y.get_children()
-        t_2 = y_children['left']
+        if y != None:
+            y_children = y.get_children()
+            t_2 = y_children['left']
+        else:
+            t_2 = None
 
 
         # make y the root of the subtree we are working with
         if node_x.is_left_child():
             x_parent._set_chosen_child('left', y)
-        elif not node_x.is_left_child():
+        elif not node_x.is_left_child() and x_parent != None:
             x_parent._set_chosen_child('right', y)
         y._set_parent(x_parent)
 
@@ -129,15 +138,22 @@ class Treap:
             elif comparing_node.get_value() < value:
                 comparing_node._set_chosen_child('right', node)
             node._set_parent(comparing_node)
-        # Set priority to the node at random
-        node._set_priority(random.randrange(rand_range))
         # Perform rotations until we are max/min heap (currently done for max)
-        while node.get_priority() > comparing_node.priority():
-            if node.is_left_child():
-                self.right_rotation(comparing_node)
-            elif not node.is_left_child():
-                self.left_rotation(comparing_node)
-            comparing_node = node.get_parent()
+        if self.heap_kind == 'max':
+            while node.get_priority() > comparing_node.priority():
+                if node.is_left_child():
+                    self.right_rotation(comparing_node)
+                elif not node.is_left_child():
+                    self.left_rotation(comparing_node)
+                comparing_node = node.get_parent()
+        elif self.heap_kind == 'min':
+            while node.get_priority() < comparing_node.priority():
+                if node.is_left_child():
+                    self.right_rotation(comparing_node)
+                elif not node.is_left_child():
+                    self.left_rotation(comparing_node)
+                comparing_node = node.get_parent()
+
         return
 
 
@@ -200,16 +216,11 @@ class Treap:
     def check_hight(self):
         pass
 
-    def copy_tree(self):
-        NewTreap = Treap()
-        return NewTreap
+    def _set_priority_range(self, range):
+        self.priority_range = range
 
-        mirror = BinaryTree(self.key)
-        if self.right is not None:
-            mirror.left = self.right.mirror_copy()
-        if self.left is not None:
-            mirror.right = self.left.mirror_copy()
-        return NewTreap
+    def _set_heap_kind(self, kind):
+        self.heap_kind = kind
 
     ###########################################
     ### P R I N T I N G   F U N C T I O N S ###
