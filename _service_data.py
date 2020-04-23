@@ -15,3 +15,14 @@ class color:
    BOLD = '\033[1m'
    UNDERLINE = '\033[4m'
    END = '\033[0m'
+
+# Usefull links:
+
+###########################################
+###    U S E F U L          L I N K S   ###
+###########################################
+
+# Applications:
+# 1) http: // jeffe.cs.illinois.edu / teaching / algorithms /
+# 2) Brian C. Dean Randomised Reduction (CSE)
+
