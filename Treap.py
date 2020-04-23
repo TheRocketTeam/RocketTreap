@@ -12,14 +12,14 @@ from _service_data import *
 #################################
 
 class Treap:
-    def __init__(self):
+    def __init__(self, priority_range = 1, heap_kind = 'max'):
         self.root = None
         self.n = 0 # Nodes number
         self.h = 0 # Tree hight ( can be usefull )
         self.values_list = [] # can be used to check our work
-        self.values_dict = [] # contains pairs value:priority
-        self.priority_range = 1
-        self.heap_kind = 'max'
+        self.values_dict = {} # contains pairs value:priority
+        self.priority_range = priority_range
+        self.heap_kind = heap_kind
 
     ###########################################
     ### S E A R C H       F U N C T I O N S ###
@@ -138,12 +138,6 @@ class Treap:
             elif comparing_node.get_value() < value:
                 comparing_node._set_chosen_child('right', node)
             node._set_parent(comparing_node)
-        # Set priority to the node at random
-        if self.priority_range == 1:
-            current_priority = random.random()
-        else:
-            current_priority = random.randrange(self.priority_range)
-        node._set_priority(current_priority)
         # Perform rotations until we are max/min heap (currently done for max)
         if self.heap_kind == 'max':
             while node.get_priority() > comparing_node.priority():
@@ -218,17 +212,6 @@ class Treap:
 
     def check_hight(self):
         pass
-
-    def copy_tree(self):
-        NewTreap = Treap()
-        return NewTreap
-
-        mirror = BinaryTree(self.key)
-        if self.right is not None:
-            mirror.left = self.right.mirror_copy()
-        if self.left is not None:
-            mirror.right = self.left.mirror_copy()
-        return NewTreap
 
     def _set_priority_range(self, range):
         self.priority_range = range

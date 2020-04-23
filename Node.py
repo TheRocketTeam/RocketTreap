@@ -12,12 +12,16 @@ from _service_data import *
 
 
 class Node:
-    def __init__(self, value, priority):
+    def __init__(self, value, priority_step = 'float'):
         self.value = value
-        # random priority from 0 to 1
-        self.priority = priority
-        if(priority == float('NaN')):
-            self.priority = random()
+        self.priority_step = priority_step
+        # Set priority to the node at random
+        if self.priority_step == 'float':
+            current_priority = random.random()
+        elif self.priority_step == 'int':
+            current_priority = random.randrange(self.priority_range)
+        node._set_priority(current_priority)
+
         self.parent = None
         self.children = {'left': None, 'right': None}
 
