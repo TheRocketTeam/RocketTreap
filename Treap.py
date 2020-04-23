@@ -177,7 +177,7 @@ class Treap:
                 parent._set_chosen_child('right', None)
             del del_candidate
         # If node is not a leaf, but has only one child
-        elif(del_candidate.check_full_children()):
+        elif(not del_candidate.check_full_children()):
 
             parent = del_candidate.get_parent()
 
