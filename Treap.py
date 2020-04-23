@@ -18,6 +18,8 @@ class Treap:
         self.h = 0 # Tree hight ( can be usefull )
         self.values_list = [] # can be used to check our work
         self.values_dict = [] # contains pairs value:priority
+        self.priority_range = 1
+        self.heap_kind = 'max'
 
     ###########################################
     ### S E A R C H       F U N C T I O N S ###
@@ -58,18 +60,22 @@ class Treap:
         y_parent = node_y.get_parent()
         y_children = node_y.get_children()
         x = y_children['left']
-        x_children = x.get_children()
-        t_2 = x_children['right']
+        if x!= None:
+            x_children = x.get_children()
+            t_2 = x_children['right']
+        else:
+            t_2 = None
 
         # make x the root of the subtree we are working with
         if node_y.is_left_child():
             y_parent._set_chosen_child('left', x)
-        elif not node_y.is_left_child():
+        elif not node_y.is_left_child() and y_parent != None:
             y_parent._set_chosen_child('right', x)
         x._set_parent(y_parent)
 
         # reattache right child of x (t_2) to be left child of y
-        t_2._set_parent(node_y)
+        if t_2 != None:
+            t_2._set_parent(node_y)
         node_y._set_chosen_child('left', t_2)
 
         # make y a child of x
@@ -83,19 +89,23 @@ class Treap:
         x_parent = node_x.get_parent()
         x_children = node_x.get_children()
         y = x_children['right']
-        y_children = y.get_children()
-        t_2 = y_children['left']
+        if y != None:
+            y_children = y.get_children()
+            t_2 = y_children['left']
+        else:
+            t_2 = None
 
 
         # make y the root of the subtree we are working with
         if node_x.is_left_child():
             x_parent._set_chosen_child('left', y)
-        elif not node_x.is_left_child():
+        elif not node_x.is_left_child() and x_parent != None:
             x_parent._set_chosen_child('right', y)
         y._set_parent(x_parent)
 
         # reattache left child of y (t_2) to be right child of y
-        t_2._set_parent(node_x)
+        if t2 != None:
+            t_2._set_parent(node_x)
         node_x._set_chosen_child('right', t_2)
 
         # make x a child of y
@@ -129,14 +139,27 @@ class Treap:
                 comparing_node._set_chosen_child('right', node)
             node._set_parent(comparing_node)
         # Set priority to the node at random
-        node._set_priority(random.randrange(rand_range))
+        if self.priority_range == 1:
+            current_priority = random.random()
+        else:
+            current_priority = random.randrange(self.priority_range)
+        node._set_priority(current_priority)
         # Perform rotations until we are max/min heap (currently done for max)
-        while node.get_priority() > comparing_node.priority():
-            if node.is_left_child():
-                self.right_rotation(comparing_node)
-            elif not node.is_left_child():
-                self.left_rotation(comparing_node)
-            comparing_node = node.get_parent()
+        if self.heap_kind == 'max':
+            while node.get_priority() > comparing_node.priority():
+                if node.is_left_child():
+                    self.right_rotation(comparing_node)
+                elif not node.is_left_child():
+                    self.left_rotation(comparing_node)
+                comparing_node = node.get_parent()
+        elif self.heap_kind == 'min':
+            while node.get_priority() < comparing_node.priority():
+                if node.is_left_child():
+                    self.right_rotation(comparing_node)
+                elif not node.is_left_child():
+                    self.left_rotation(comparing_node)
+                comparing_node = node.get_parent()
+
         return
 
 
@@ -206,6 +229,12 @@ class Treap:
         if self.left is not None:
             mirror.right = self.left.mirror_copy()
         return NewTreap
+
+    def _set_priority_range(self, range):
+        self.priority_range = range
+
+    def _set_heap_kind(self, kind):
+        self.heap_kind = kind
 
     ###########################################
     ### P R I N T I N G   F U N C T I O N S ###

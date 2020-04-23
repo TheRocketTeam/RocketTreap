@@ -12,7 +12,7 @@ from _service_data import *
 
 
 class Node:
-    def __init__(self, value, priority = float('Nan')):
+    def __init__(self, value, priority):
         self.value = value
         # random priority from 0 to 1
         self.priority = priority
@@ -50,9 +50,9 @@ class Node:
         return False
 
     def is_left_child(self):
+        # We conventionally agree that root is a right child
         if self.parent == None:
-            return None
-        # is this correct?
+            return False
         elif self.parent.get_children()['left'] == self:
             return True
         else:
