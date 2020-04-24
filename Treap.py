@@ -104,7 +104,7 @@ class Treap:
         y._set_parent(x_parent)
 
         # reattache left child of y (t_2) to be right child of y
-        if t2 != None:
+        if(t_2 != None):
             t_2._set_parent(node_x)
         node_x._set_chosen_child('right', t_2)
 
@@ -145,15 +145,21 @@ class Treap:
                     self.right_rotation(comparing_node)
                 elif not node.is_left_child():
                     self.left_rotation(comparing_node)
-                comparing_node = node.get_parent()
+                if not node.is_root():
+                    comparing_node = node.get_parent()
+                else:
+                    return
         elif self.heap_kind == 'min':
             while node.get_priority() < comparing_node.priority():
                 if node.is_left_child():
                     self.right_rotation(comparing_node)
                 elif not node.is_left_child():
                     self.left_rotation(comparing_node)
-                comparing_node = node.get_parent()
 
+                if not node.is_root():
+                    comparing_node = node.get_parent()
+                else:
+                    return
         return
 
 
@@ -183,6 +189,9 @@ class Treap:
                 parent._set_chosen_child('left', child)
             else:
                 parent._set_chosen_child('right', child)
+
+            child._set_parent(parent)
+
             del del_candidate
 
         # If node has two children

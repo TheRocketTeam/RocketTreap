@@ -17,11 +17,9 @@ class Node:
         self.priority_step = priority_step
         # Set priority to the node at random
         if self.priority_step == 'int':
-            current_priority = random.randrange(self.priority_range)
+            self.priority = random.randrange(self.priority_range)
         elif self.priority_step == 'float':
-            current_priority = random.random()
-        node._set_priority(current_priority)
-
+            self.priority = random.random()
         self.parent = None
         self.children = {'left': None, 'right': None}
 
