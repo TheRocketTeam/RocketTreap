@@ -23,3 +23,5 @@ if __name__ == '__main__':
 
     treap.delete(7)
     treap.normal_print(treap.root)
+
+    print(treap.check_hight())

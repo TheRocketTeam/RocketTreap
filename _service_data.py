@@ -1,3 +1,11 @@
+#################################
+# TODO:
+# add global priority step
+
+#################################
+
+
+
 # positive infinity
 p_inf = float("inf")
 

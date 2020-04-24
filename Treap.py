@@ -5,8 +5,8 @@ from _service_data import *
 #################################
 # TODO:
 # Add meld function from here: https://www.youtube.com/watch?v=erKlLEXLKyY
-# Rotations work wrong (deletion of 7 isn't correct)
-# _is_left_child
+# add height search
+#
 
 
 #################################
@@ -213,8 +213,16 @@ class Treap:
     ### S E R V I C E     F U N C T I O N S ###
     ###########################################
 
+    def __depth_search(self, node, cur_depth):
+        if(node == None):
+            return 0
+        else:
+            r_child = node.get_chosen_child('right')
+            l_child = node.get_chosen_child('left')
+            return max(cur_depth, self.__depth_search(r_child, cur_depth+1), self.__depth_search(l_child, cur_depth+1))
+
     def check_hight(self):
-        pass
+        return self.__depth_search(self.root, 0)
 
     def _set_priority_range(self, range):
         self.priority_range = range
@@ -283,6 +291,7 @@ class Treap:
 
     def __print_layer(self, layer_nodes, current_layer, occupied_windows):
         layer_windows = []
+        self.h = self.check_hight()
         for i in range(1, 2**(self.h+1)):
             # todo: check height - current_layer > 0
             if( i % (2 ** (self.h - current_layer)) == 0 and
