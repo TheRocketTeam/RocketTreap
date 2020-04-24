@@ -12,14 +12,18 @@ from _service_data import *
 #################################
 
 class Treap:
-    def __init__(self, priority_range = 1, heap_kind = 'max'):
+    def __init__(self, pr_range = 1, pr_step = 'float', heap_kind = 'max'):
+        global priority_range
+        global priority_step
+
         self.root = None
         self.n = 0 # Nodes number
         self.h = 0 # Tree hight ( can be usefull )
         self.values_list = [] # can be used to check our work
         self.values_dict = {} # contains pairs value:priority
-        self.priority_range = priority_range
         self.heap_kind = heap_kind
+        priority_range = pr_range
+        priority_step = pr_step
 
     ###########################################
     ### S E A R C H       F U N C T I O N S ###
@@ -227,6 +231,7 @@ class Treap:
 
     def _set_heap_kind(self, kind):
         self.heap_kind = kind
+
 
     ###########################################
     ### P R I N T I N G   F U N C T I O N S ###

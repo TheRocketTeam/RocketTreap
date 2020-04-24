@@ -12,13 +12,15 @@ from _service_data import *
 
 
 class Node:
-    def __init__(self, value, priority_step = 'float'):
+    def __init__(self, value):
+        global priority_range
+        global priority_step
+
         self.value = value
-        self.priority_step = priority_step
         # Set priority to the node at random
-        if self.priority_step == 'int':
-            self.priority = random.randrange(self.priority_range)
-        elif self.priority_step == 'float':
+        if priority_step == 'int':
+            self.priority = random.randrange(priority_range)
+        elif priority_step == 'float':
             self.priority = random.random()
         self.parent = None
         self.children = {'left': None, 'right': None}

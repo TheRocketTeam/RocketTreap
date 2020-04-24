@@ -4,6 +4,10 @@ p_inf = float("inf")
 # negative infinity
 n_inf = float("-inf")
 
+# priority functions
+global priority_range
+global priority_step
+
 class color:
    PURPLE = '\033[95m'
    CYAN = '\033[96m'
