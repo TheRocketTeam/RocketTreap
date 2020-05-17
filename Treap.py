@@ -5,8 +5,6 @@ from _service_data import *
 #################################
 # TODO:
 # Add meld function from here: https://www.youtube.com/watch?v=erKlLEXLKyY
-# Rotations work wrong (deletion of 7 isn't correct)
-# _is_left_child
 
 
 #################################
@@ -123,47 +121,56 @@ class Treap:
     ###########################################
 
 
-    def insert(self, value, rand_range):
-        node = Node(value)
+    def insert(self, node):
+        # node = Node(value)
+        value = node.get_value()
         # If the tree is empty, set this node as a root
         if self.root == None:
             self.root = node
+            return
         else:
             # We will always work with two nodes - one given and one with which we are comparing the given one
             comparing_node = self.root
-            # At forst we want to insert the new node to be a leaf
-            while not comparing_node._is_leaf():
+            # At first we want to insert the new node to be a leaf
+            flag = False
+            while not comparing_node._is_leaf() and not flag:
                 if comparing_node.get_value() >= value:
-                    comparing_node = comparing_node.get_chosen_child('left')
+                    if comparing_node.get_chosen_child('left') == None:
+                        flag = True
+                    else:
+                        comparing_node = comparing_node.get_chosen_child('left')
                 elif comparing_node.get_value() < value:
-                    comparing_node = comparing_node.get_chosen_child('right')
+                    if comparing_node.get_chosen_child('right') == None:
+                        flag = True
+                    else:
+                        comparing_node = comparing_node.get_chosen_child('right')
             if comparing_node.get_value() >= value:
                 comparing_node._set_chosen_child('left', node)
             elif comparing_node.get_value() < value:
                 comparing_node._set_chosen_child('right', node)
             node._set_parent(comparing_node)
-        # Perform rotations until we are max/min heap (currently done for max)
-        if self.heap_kind == 'max':
-            while node.get_priority() > comparing_node.priority():
-                if node.is_left_child():
-                    self.right_rotation(comparing_node)
-                elif not node.is_left_child():
-                    self.left_rotation(comparing_node)
-                if not node.is_root():
-                    comparing_node = node.get_parent()
-                else:
-                    return
-        elif self.heap_kind == 'min':
-            while node.get_priority() < comparing_node.priority():
-                if node.is_left_child():
-                    self.right_rotation(comparing_node)
-                elif not node.is_left_child():
-                    self.left_rotation(comparing_node)
-
-                if not node.is_root():
-                    comparing_node = node.get_parent()
-                else:
-                    return
+        # Perform rotations until we are max/min heap
+        # if self.heap_kind == 'max':
+        #     while node.get_priority() > comparing_node.get_priority():
+        #         if node.is_left_child():
+        #             self.right_rotation(comparing_node)
+        #         elif not node.is_left_child():
+        #             self.left_rotation(comparing_node)
+        #         if not node.is_root():
+        #             comparing_node = node.get_parent()
+        #         else:
+        #             return
+        # elif self.heap_kind == 'min':
+        #     while node.get_priority() < comparing_node.get_priority():
+        #         if node.is_left_child():
+        #             self.right_rotation(comparing_node)
+        #         elif not node.is_left_child():
+        #             self.left_rotation(comparing_node)
+        #
+        #         if not node.is_root():
+        #             comparing_node = node.get_parent()
+        #         else:
+        #             return
         return
 
 
@@ -359,5 +366,32 @@ class Treap:
                 current_layer += 1
 
             print('done')
+
+
+
+Treap_1 = Treap()
+n_100 = Node(100)
+Treap_1.insert(n_100)
+n_60 = Node(60)
+Treap_1.insert(n_60)
+print ('node n_60', n_60, 'n_60 parent', n_60.get_parent())
+print ('node n_100', n_100, 'n_100 children', n_100.get_children())
+n_130 = Node(130)
+Treap_1.insert(n_130)
+print ('node n_130', n_130, 'n_130 parent', n_130.get_parent())
+print ('node n_100', n_100, 'n_100 children', n_100.get_children())
+n_150 = Node(150)
+Treap_1.insert(n_150)
+n_144 = Node(144)
+Treap_1.insert(n_144)
+n_200 = Node(200)
+Treap_1.insert(n_200)
+n_15 = Node(15)
+Treap_1.insert(n_15)
+n_67 = Node(67)
+Treap_1.insert(n_67)
+n_80 = Node(80)
+Treap_1.insert(n_80)
+Treap_1.pretty_print()
 
 

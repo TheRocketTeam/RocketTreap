@@ -6,7 +6,10 @@ n_inf = float("-inf")
 
 # priority functions
 global priority_range
+priority_range = '1'
 global priority_step
+priority_step= 'float'
+
 
 class color:
    PURPLE = '\033[95m'
