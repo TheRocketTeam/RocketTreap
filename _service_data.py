@@ -9,7 +9,8 @@ global priority_range
 priority_range = '1'
 global priority_step
 priority_step= 'float'
-
+global heap_kind
+heap_kind = 'max'
 
 class color:
    PURPLE = '\033[95m'

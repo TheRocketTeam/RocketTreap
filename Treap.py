@@ -9,19 +9,21 @@ from _service_data import *
 
 #################################
 
+global priority_range
+global priority_step
+global heap_kind
+
 class Treap:
-    def __init__(self, pr_range = 1, pr_step = 'float', heap_kind = 'max'):
-        global priority_range
-        global priority_step
+    def __init__(self, pr_range = priority_range, pr_step = priority_step, hp_kind = heap_kind):
 
         self.root = None
         self.n = 0 # Nodes number
         self.h = 0 # Tree hight ( can be usefull )
         self.values_list = [] # can be used to check our work
         self.values_dict = {} # contains pairs value:priority
-        self.heap_kind = heap_kind
-        priority_range = pr_range
-        priority_step = pr_step
+        self.heap_kind = hp_kind
+        self.priority_range = pr_range
+        self.priority_step = pr_step
 
     ###########################################
     ### S E A R C H       F U N C T I O N S ###
@@ -120,57 +122,66 @@ class Treap:
     ### I N S E R T       F U N C T I O N S ###
     ###########################################
 
+    def bst_insert(self, node):
 
-    def insert(self, node):
-        # node = Node(value)
+        # Get the value of the node
         value = node.get_value()
+
         # If the tree is empty, set this node as a root
         if self.root == None:
             self.root = node
-            return
         else:
             # We will always work with two nodes - one given and one with which we are comparing the given one
             comparing_node = self.root
-            # At first we want to insert the new node to be a leaf
-            flag = False
-            while not comparing_node._is_leaf() and not flag:
+            while not comparing_node._is_leaf():
                 if comparing_node.get_value() >= value:
                     if comparing_node.get_chosen_child('left') == None:
-                        flag = True
+                        comparing_node._set_chosen_child('left', node)
+                        node._set_parent(comparing_node)
+                        return
                     else:
                         comparing_node = comparing_node.get_chosen_child('left')
                 elif comparing_node.get_value() < value:
                     if comparing_node.get_chosen_child('right') == None:
-                        flag = True
+                        comparing_node._set_chosen_child('right', node)
+                        node._set_parent(comparing_node)
+                        return
                     else:
                         comparing_node = comparing_node.get_chosen_child('right')
+            # Deal with comparing node being a leaf
             if comparing_node.get_value() >= value:
                 comparing_node._set_chosen_child('left', node)
             elif comparing_node.get_value() < value:
                 comparing_node._set_chosen_child('right', node)
             node._set_parent(comparing_node)
+        return
+
+    def heap_fix(self, node, comparing_node):
+        if node.is_left_child():
+            self.right_rotation(comparing_node)
+        elif not node.is_left_child():
+            self.left_rotation(comparing_node)
+        return
+
+    def insert(self, node):
+
+        # node = Node(value, self.priority_range, self.priority_step)
+        value = node.get_value()
+
+        # Perform bst insertion
+        self.bst_insert(node)
+
         # Perform rotations until we are max/min heap
-        # if self.heap_kind == 'max':
-        #     while node.get_priority() > comparing_node.get_priority():
-        #         if node.is_left_child():
-        #             self.right_rotation(comparing_node)
-        #         elif not node.is_left_child():
-        #             self.left_rotation(comparing_node)
-        #         if not node.is_root():
-        #             comparing_node = node.get_parent()
-        #         else:
-        #             return
-        # elif self.heap_kind == 'min':
-        #     while node.get_priority() < comparing_node.get_priority():
-        #         if node.is_left_child():
-        #             self.right_rotation(comparing_node)
-        #         elif not node.is_left_child():
-        #             self.left_rotation(comparing_node)
-        #
-        #         if not node.is_root():
-        #             comparing_node = node.get_parent()
-        #         else:
-        #             return
+        comparing_node = node.get_parent()
+
+        if self.heap_kind == 'max':
+            while comparing_node != None and node.get_priority() >= comparing_node.get_priority():
+                self.heap_fix(node, comparing_node)
+                comparing_node = node.get_parent()
+        elif self.heap_kind == 'min':
+            while comparing_node != None and node.get_priority() < comparing_node.get_priority():
+                self.heap_fix(node, comparing_node)
+                comparing_node = node.get_parent()
         return
 
 
@@ -369,29 +380,42 @@ class Treap:
 
 
 
+
+# Treap_2 = Treap()
+# Treap_2.insert(100)
+# Treap_2.insert(60)
+# Treap_2.insert(130)
+# Treap_2.insert(150)
+# Treap_2.insert(144)
+# Treap_2.pretty_print()
+
 Treap_1 = Treap()
 n_100 = Node(100)
 Treap_1.insert(n_100)
 n_60 = Node(60)
 Treap_1.insert(n_60)
-print ('node n_60', n_60, 'n_60 parent', n_60.get_parent())
-print ('node n_100', n_100, 'n_100 children', n_100.get_children())
-n_130 = Node(130)
-Treap_1.insert(n_130)
-print ('node n_130', n_130, 'n_130 parent', n_130.get_parent())
-print ('node n_100', n_100, 'n_100 children', n_100.get_children())
-n_150 = Node(150)
-Treap_1.insert(n_150)
-n_144 = Node(144)
-Treap_1.insert(n_144)
-n_200 = Node(200)
-Treap_1.insert(n_200)
-n_15 = Node(15)
-Treap_1.insert(n_15)
-n_67 = Node(67)
-Treap_1.insert(n_67)
-n_80 = Node(80)
-Treap_1.insert(n_80)
+print ('node n_60', n_60, 'n_60 parent', n_60.get_parent(), 'priority', n_60.get_priority())
+print ('node n_100', n_100, 'n_100 children', n_100.get_children(), 'priority', n_100.get_priority())
+
+print ('node n_100', n_100, 'n_100 parent', n_100.get_parent(), 'priority', n_100.get_priority())
+print ('node n_60', n_100, 'n_60 children', n_60.get_children(), 'priority', n_60.get_priority())
 Treap_1.pretty_print()
 
+# n_130 = Node(130)
+# Treap_1.insert(n_130)
+# print ('node n_130', n_130, 'n_130 parent', n_130.get_parent())
+# print ('node n_100', n_100, 'n_100 children', n_100.get_children())
+# Treap_1.pretty_print()
+# n_150 = Node(150)
+# Treap_1.insert(n_150)
+# n_144 = Node(144)
+# Treap_1.insert(n_144)
+# n_200 = Node(200)
+# Treap_1.insert(n_200)
+# n_15 = Node(15)
+# Treap_1.insert(n_15)
+# n_67 = Node(67)
+# Treap_1.insert(n_67)
+# n_80 = Node(80)
+# Treap_1.insert(n_80)
 
