@@ -14,13 +14,16 @@ class Node:
     global priority_range
     global priority_step
 
-    def __init__(self, value, pr_range = priority_range, pr_step = priority_step):
+    def __init__(self, value, pr_range = priority_range, pr_step = priority_step, priority = None):
         self.value = value
         # Set priority to the node at random
-        if pr_step == 'int':
-            self.priority = randrange(pr_range)
-        elif pr_step == 'float':
-            self.priority = random()
+        if priority == None:
+            if pr_step == 'int':
+                self.priority = randrange(pr_range)
+            elif pr_step == 'float':
+                self.priority = random()
+        else:
+            self.priority = priority
         self.parent = None
         self.children = {'left': None, 'right': None}
 
