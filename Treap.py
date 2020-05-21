@@ -1,6 +1,7 @@
 from Node import Node
 from random import *
 from _service_data import *
+seed(12)
 
 #################################
 # TODO:
@@ -67,6 +68,8 @@ class Treap:
         if x!= None:
             x_children = x.get_children()
             t_2 = x_children['right']
+            if node_y.is_root():
+                self.root = x
         else:
             t_2 = None
 
@@ -96,6 +99,8 @@ class Treap:
         if y != None:
             y_children = y.get_children()
             t_2 = y_children['left']
+            if node_x.is_root():
+                self.root = y
         else:
             t_2 = None
 
@@ -389,17 +394,21 @@ class Treap:
 # Treap_2.insert(144)
 # Treap_2.pretty_print()
 
-Treap_1 = Treap()
-n_100 = Node(100)
-Treap_1.insert(n_100)
-n_60 = Node(60)
-Treap_1.insert(n_60)
-print ('node n_60', n_60, 'n_60 parent', n_60.get_parent(), 'priority', n_60.get_priority())
-print ('node n_100', n_100, 'n_100 children', n_100.get_children(), 'priority', n_100.get_priority())
+if __name__ == '__main__':
+    Treap_1 = Treap()
+    n_100 = Node(100)
+    Treap_1.insert(n_100)
+    n_60 = Node(60)
+    Treap_1.insert(n_60)
+    print ('Vit', 'node root', n_100, 'n_100 children', Treap_1.root.get_children(), 'priority', n_100.get_priority())
 
-print ('node n_100', n_100, 'n_100 parent', n_100.get_parent(), 'priority', n_100.get_priority())
-print ('node n_60', n_100, 'n_60 children', n_60.get_children(), 'priority', n_60.get_priority())
-Treap_1.pretty_print()
+    print ('node n_60', n_60, 'n_60 parent', n_60.get_parent(), 'priority', n_60.get_priority())
+    print ('node n_100', n_100, 'n_100 children', n_100.get_children(), 'priority', n_100.get_priority())
+
+    print ('node n_100', n_100, 'n_100 parent', n_100.get_parent(), 'priority', n_100.get_priority())
+    print ('node n_60', n_100, 'n_60 children', n_60.get_children(), 'priority', n_60.get_priority())
+    Treap_1.pretty_print()
+    Treap_1.normal_print(Treap_1.root)
 
 # n_130 = Node(130)
 # Treap_1.insert(n_130)
